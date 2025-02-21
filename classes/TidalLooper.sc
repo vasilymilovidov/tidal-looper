@@ -158,6 +158,29 @@ TidalLooper {
 			dirt.soundLibrary.freeSoundFiles(~lname.asSymbol);
 		};
 
+    synths[\persistLoops] = {
+    var abspath;
+    
+    this.mapTidalParameter;
+    
+    if(dirt.soundLibrary.buffers[~lname.asSymbol].notNil, {
+        abspath = persistPath.standardizePath ++ ~lname.asSymbol;
+        
+        File.mkdir(abspath);
+        
+        numBuffers.do({ |index|
+            var currentBuffer = dirt.soundLibrary.buffers[~lname.asSymbol][index];
+            if(currentBuffer.notNil, {
+                currentBuffer.write(
+                    abspath ++ "/" ++ index ++ ".aiff"
+                );
+            });
+        });
+    }, {
+        "No buffers found for %".format(~lname).warn;
+    });
+};
+
 		^synths;
 	}
 
